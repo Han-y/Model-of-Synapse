@@ -59,9 +59,9 @@ clear('S'); % DONT REMOVE THIS LINE
     S.timeStepsPerMS        = round(1000*2); %=0.5 microseconds
 %---- cleft geometry control constants ------------------------------------
     S.R_Cleft               = 1128; % radius, nm                      % 400/2
-    S.R_PSD                 = PSD * PSD_factor*1 ; % radius, nm. Data is from Xue Lei % 200/2
+    S.R_PSD                 = PSD * PSD_factor; % radius, nm. Data is from Xue Lei % 200/2
     S.R_ES                  = S.R_Cleft + 40;   % distance between pre/post-synaptic cylinders and glial sheath
-    S.R_Reservoir           = 126 * PSD_factor;
+    S.R_Reservoir           = PSD * PSD_factor;
     
     S.R_ReleaseZone         = 0 + (release_zone - 0) * random_number; % 0;%S.R_Cleft% radius of release zone, 0=center 
 
