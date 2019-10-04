@@ -1,8 +1,8 @@
-hold off;
+ hold off;
 %%% Parameters can be changed
 glu_No = 10000;
 N_ampar_PerCluster=100 ; %number of total AMPARs
-runs = 160;
+runs = 80;
 
 period = 12; % P4, P8, P12, P18, P30
 ratio = 0.45; % GluA2 / (GluA2 + GluA4)
@@ -15,7 +15,7 @@ NND_No = 0; % number of synapse @NND
 timestepSize = 10 * 2000;% 10 ms * 2000 timeStepSize per microsecond
 baseline = 2 * 2000; % 2 ms
 dt = 0.5; % 0.5us, time step
-range = 2000; % the range of fitting, 
+range = 1500; % the range of fitting, 
               % it should be changed sometimes, because the fitting
               % equation can't be got when the curve larger than zero
 
@@ -85,7 +85,7 @@ for i = 1: runs
         I_total_a4 = zeros(20000,runs);
         continue
     else
-        name = ['GluA4_P',num2str(period),'_',num2str(i), '.mat'];
+        name = ['GluA4_P',num2str(period),'_',num2str(i+80), '.mat'];
         load(name);
         open_state_total_a4(:,i) = amparStates(:,4);
         open_state_a4 = open_state_total_a4(:,i);
@@ -94,7 +94,7 @@ for i = 1: runs
         Po_a4 = open_state_a4./(N_ampar_PerCluster*(1-ratio)); % open probability on PSD
         
         if SpillOver == 1
-            name_SpillOver = ['GluA4_P',num2str(period),'_',num2str(i) '_SpillOver.mat'];
+            name_SpillOver = ['GluA4_P',num2str(period),'_',num2str(i+80) '_SpillOver.mat'];
             load(name_SpillOver);
             open_state_total_a4_SpillOver(:,i) = amparStates(:,4);
             open_state_a4_SpillOver = open_state_total_a4_SpillOver(:,i);
@@ -185,7 +185,7 @@ end
 %        extract rise phase
         X_rise_a4 = X; X_rise_a4((index_max_a4 + 1) : tmp) = [];
         I_rise_a4 = I_fit_a4; I_rise_a4 ((index_max_a4 + 1) : tmp) = [];
-%         extract decay phase
+%        extract decay phase
         X_decay_a4 = X; X_decay_a4(1:(index_max_a4-1)) = [];
         I_decay_a4 = I_fit_a4; I_decay_a4(1:(index_max_a4-1)) = [];                
 

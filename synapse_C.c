@@ -367,9 +367,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     /* case kinetics_a2 : */
             Q_C1_C1_a2 = Q_transition[kinetics_a2-1]   [amparState_C1_a2-1][amparState_C1_a2-1]; /* -1 == MATLAB indexing */
             Q_D3_D3_a2 = Q_transition[kinetics_a2-1]   [amparState_D3_a2-1][amparState_D3_a2-1];
-    /* case kinetics_a4:
-       case kinetics_a4_gamma_2:
-       case kinetics_a4_gamma_4: */
+    /* case kinetics_a4: */
             Q_C1_C1_a4 = Q_transition[kinetics_a4-1]   [amparState_C1_a4-1][amparState_C1_a4-1];
             Q_D3_D3_a4 = Q_transition[kinetics_a4-1]   [amparState_D3_a4-1][amparState_D3_a4-1]; /* -1 == MATLAB indexing */
     }

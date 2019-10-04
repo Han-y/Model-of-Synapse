@@ -53,9 +53,9 @@ global  gluState_PumpedOut
     amparState_B = 2; %#ok % bound
     amparState_D = 3; %#ok % desensitized
     amparState_O = 4; %#ok % open
-   
+    
+    AMPARSTATES_NO = 4;% free, bound, desensitized, open
 
-    AMPARSTATES_NO = 4; % free, bound, desensitized, open
     
     MAX_AMPARSTATES_NO = 9; % number of AMPAR states (MAXIMUM used for all possible schemes)
     
@@ -183,8 +183,8 @@ global  gluState_PumpedOut
     % for backward compatibility
     if isfield(SIM, 'kineticModel') ~= 0
         kineticsFracAtPulse = [0 0 0 0];
-        if     strcmpi(SIM.kineticModel, 'GluA1')
-            kineticsFracAtPulse(kinetics_GluA1) = 1;
+        if     strcmpi(SIM.kineticModel, 'GluA2')
+            kineticsFracAtPulse(kinetics_GluA2) = 1;
         elseif strcmpi(SIM.kineticModel, 'GluA4')
             kineticsFracAtPulse(kinetics_GluA4) = 1;
         end
@@ -287,12 +287,12 @@ global  gluState_PumpedOut
 %                            ----------------------------------------------
 %                            ----------------------------------------------
 %                            ----------------------------------------------
-    fprintf('amparNo = ', SIM.amparNo);
+    
     amparPeakDistr = zeros(SIM.amparNo*SIM.amparPeakRes, AMPARSTATES_NO, 'double');   %#ok %
     
     amparTags    = zeros(SIM.timeSteps, AMPARTAGS_NO,   'double');   %#ok % array of AMPAR states
     amparTagsVar = zeros(SIM.timeSteps, AMPARTAGS_NO,   'double');   %#ok % array of AMPAR states
-    
+   
     amparStates  = zeros(SIM.timeSteps, AMPARSTATES_NO, 'double');   %#ok % array of AMPAR states
     amparMean    = zeros(SIM.timeSteps, AMPARSTATES_NO, 'double');   %#ok % array of AMPAR states
     amparVar     = zeros(SIM.timeSteps, AMPARSTATES_NO, 'double');   %#ok % AMPAR variance (whole response)
@@ -324,7 +324,7 @@ global  gluState_PumpedOut
                     'P_transition',     zeros(KINETICS_NO, MAX_AMPARSTATES_NO, MAX_AMPARSTATES_NO, 'double'), ...
                     'P_bindingToAMPAR', zeros(KINETICS_NO, MAX_AMPARSTATES_NO, 'double'));
 
-    %---- slow-GluAs scheme --------------------------------------
+    %---- jonas-major-sakmann scheme --------------------------------------
     name = 'GluA2';
     kinetics.name(kinetics_GluA2, 1:length(name)) = name;
         
@@ -350,48 +350,49 @@ global  gluState_PumpedOut
     kinetics.amparState_O(kinetics_GluA2, amparState_O)  = 1; %#ok  O
         
 
-        k1_a2  = SIM.factor*1.8412E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
-        k_1_a2 = SIM.factor*4.323E3          *1/1000;% ms^-1
-        k2_a2  = SIM.factor*4E6              *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
-        k_2_a2 = SIM.factor*1.7201E4         *1/1000;% ms^-1
-        k3_a2  = SIM.factor* 4E4             *1/1000;% ms^-1
-        k_3_a2 = SIM.factor* 5E3             *1/1000;% ms^-1
-        k4_a2  = SIM.factor* 1E3             *1/1000;% ms^-1
-        k_4_a2 = SIM.factor*210.915          *1/1000;% ms^-1
-        k5_a2  = SIM.factor*1.9863E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
-        k_5_a2 = SIM.factor*1.37937E4        *1/1000;% ms^-1
-        k6_a2  = SIM.factor*848.141          *1/1000;% ms^-1
-        k_6_a2 = SIM.factor*404.19           *1/1000;% ms^-1
-        k7_a2  = SIM.factor* 51.7            *1/1000;% ms^-1
-        k_7_a2 = SIM.factor* 93.287          *1/1000;% ms^-1
-        k8_a2  = SIM.factor*885.99           *1/1000;% ms^-1
-        k_8_a2 = SIM.factor*280.35           *1/1000;% ms^-1
-        k9_a2  = SIM.factor* 380.434         *1/1000;% ms^-1
-        k_9_a2 = SIM.factor*19.44            *1/1000;% ms^-1
-        k10_a2 = SIM.factor*2.797            *1/1000;% ms^-1
-        k_10_a2= SIM.factor*0.5449           *1/1000;% ms^-1
-        k11_a2 = SIM.factor* 200             *1/1000;% ms^-1
-        k_11_a2= SIM.factor*500              *1/1000;% ms^-1
+%%%% 2015-Calyx of Held
+        k1_a1  = SIM.factor*1.8412E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
+        k_1_a1 = SIM.factor*4.323E3          *1/1000;% ms^-1
+        k2_a1  = SIM.factor*4E6              *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
+        k_2_a1 = SIM.factor*1.7201E4         *1/1000;% ms^-1
+        k3_a1  = SIM.factor* 4E4          *1/1000;% ms^-1
+        k_3_a1 = SIM.factor* 5E3         *1/1000;% ms^-1
+        k4_a1  = SIM.factor* 1E3           *1/1000;% ms^-1
+        k_4_a1 = SIM.factor*210.915          *1/1000;% ms^-1
+        k5_a1  = SIM.factor*1.9863E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
+        k_5_a1 = SIM.factor*13.7937E3         *1/1000;% ms^-1
+        k6_a1  = SIM.factor*848.141          *1/1000;% ms^-1
+        k_6_a1 = SIM.factor*404.19          *1/1000;% ms^-1
+        k7_a1  = SIM.factor* 51.7             *1/1000;% ms^-1
+        k_7_a1 = SIM.factor* 93.287           *1/1000;% ms^-1
+        k8_a1  = SIM.factor*885.99           *1/1000;% ms^-1
+        k_8_a1 = SIM.factor*280.35           *1/1000;% ms^-1
+        k9_a1  = SIM.factor* 380.434          *1/1000;% ms^-1
+        k_9_a1 = SIM.factor*1.944E1           *1/1000;% ms^-1
+        k10_a1 = SIM.factor*2.797           *1/1000;% ms^-1
+        k_10_a1= SIM.factor*0.5449           *1/1000;% ms^-1
+        k11_a1 = SIM.factor* 200              *1/1000;% ms^-1
+        k_11_a1= SIM.factor*500           *1/1000;% ms^-1
         
         Q = [
         %       C0         C1         C2         D3         D4         D5         D6         D7         O
             00000,       0.0,         0,         0,         0,         0,         0,         0,         0 ;    % C0
             
-           k_1_a2,     00000,       0.0,     k8_a2,         0,         0,         0,         0,         0 ;    % C1
+           k_1_a1,     00000,       0.0,     k8_a1,         0,         0,         0,         0,         0 ;    % C1
              
-                0,    k_2_a2,     00000,       0.0,     k9_a2,         0,         0,         0,     k3_a2 ;    % C2
+                0,    k_2_a1,     00000,       0.0,     k9_a1,         0,         0,         0,     k3_a1 ;    % C2
                 
-                0,    k_8_a2,         0,     00000,       0.0,         0,         0,         0,         0 ;    % D3
+                0,    k_8_a1,         0,     00000,       0.0,         0,         0,         0,         0 ;    % D3
                  
-                0,         0,    k_9_a2,    k_5_a2,     00000,     k6_a2,         0,         0,         0 ;    % D4
+                0,         0,    k_9_a1,    k_5_a1,     00000,     k6_a1,         0,         0,         0 ;    % D4
                 
-                0,         0,         0,         0,    k_6_a2,     00000,     k7_a2,         0,   k_10_a2 ;    % D5
+                0,         0,         0,         0,    k_6_a1,     00000,     k7_a1,         0,   k_10_a1 ;    % D5
                 
-                0,         0,         0,         0,         0,    k_7_a2,     00000,   k_11_a2,         0 ;    % D6
+                0,         0,         0,         0,         0,    k_7_a1,     00000,   k_11_a1,         0 ;    % D6
                 
-                0,         0,         0,         0,         0,         0,    k11_a2,     00000,    k_4_a2 ;    % D7
+                0,         0,         0,         0,         0,         0,    k11_a1,     00000,    k_4_a1 ;    % D7
                 
-                0,         0,    k_3_a2,         0,         0,    k10_a2,         0,     k4_a2,     00000 ];    % O
+                0,         0,    k_3_a1,         0,         0,    k10_a1,         0,     k4_a1,     00000 ];    % O
         
 
         % prepare the transition matrix, where no trans        
@@ -401,11 +402,11 @@ global  gluState_PumpedOut
     
     kinetics.P_transition(kinetics_GluA2, :, :) = expm(Q* SIM.timeStepSize);  %#ok % transition prob matrix
 
-    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_C0) = (10/6.023*k1_a2*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
-    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_C1) = (10/6.023*k2_a2*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
-    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_D3) = (10/6.023*k5_a2*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
+    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_C0) = (10/6.023*k1_a1*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
+    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_C1) = (10/6.023*k2_a1*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
+    kinetics.P_bindingToAMPAR(kinetics_GluA2, amparState_D3) = (10/6.023*k5_a1*sqrt(SIM.timeStepSize*pi/SIM.D_glu)) / (pi*SIM.R_BindingToAMPAR^2); %#ok
 
-    %---- fast-GluAs scheme --------------------------------
+    %---- GluA4 (no TARP ligation) scheme --------------------------------
     name = 'GluA4';
     kinetics.name(kinetics_GluA4, 1:length(name)) = name;
         
@@ -419,7 +420,7 @@ global  gluState_PumpedOut
         amparState_D5   = 6;
         amparState_D6   = 7;
         amparState_D7   = 8;
-        amparState_O    = 9;
+        amparState_O   = 9;
 
     kinetics.amparState_F(kinetics_GluA4, amparState_C0 ) = 1;%#ok  F
     kinetics.amparState_B(kinetics_GluA4, amparState_C1) = 1; %#ok  B
@@ -431,29 +432,29 @@ global  gluState_PumpedOut
     kinetics.amparState_D(kinetics_GluA4, amparState_D7) = 1; %#ok  D
     kinetics.amparState_O(kinetics_GluA4, amparState_O)  = 1; %#ok  O   
         
-
+%%%% 2015-Calyx of Held
         k1_a4  = SIM.factor*1.8412E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
         k_1_a4 = SIM.factor*4.323E3          *1/1000;% ms^-1
         k2_a4  = SIM.factor*4E6              *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
         k_2_a4 = SIM.factor*1.7201E4         *1/1000;% ms^-1
-        k3_a4  = SIM.factor* 7E5             *1/1000;% ms^-1
-        k_3_a4 = SIM.factor* 8E4             *1/1000;% ms^-1
-        k4_a4  = SIM.factor* 1E4             *1/1000;% ms^-1
+        k3_a4  = SIM.factor* 7E5          *1/1000;% ms^-1
+        k_3_a4 = SIM.factor* 8E4         *1/1000;% ms^-1
+        k4_a4  = SIM.factor* 1E4           *1/1000;% ms^-1
         k_4_a4 = SIM.factor*421.849          *1/1000;% ms^-1
         k5_a4  = SIM.factor*1.9863E7         *1/1000;%#ok   % ms^-1 * M^-1 (ie, only, if singly liganded)
-        k_5_a4 = SIM.factor*1.168E3          *1/1000;% ms^-1
-        k6_a4  = SIM.factor*1.35E3           *1/1000;% ms^-1
+        k_5_a4 = SIM.factor*1.168E3         *1/1000;% ms^-1
+        k6_a4  = SIM.factor*1.35E3          *1/1000;% ms^-1
         k_6_a4 = SIM.factor* 137.12          *1/1000;% ms^-1
-        k7_a4  = SIM.factor*187.35           *1/1000;% ms^-1
+        k7_a4  = SIM.factor*187.35             *1/1000;% ms^-1
         k_7_a4 = SIM.factor*29.164           *1/1000;% ms^-1
         k8_a4  = SIM.factor*885.99           *1/1000;% ms^-1
         k_8_a4 = SIM.factor*280.35           *1/1000;% ms^-1
-        k9_a4  = SIM.factor* 122.35          *1/1000;% ms^-1
-        k_9_a4 = SIM.factor*19.44            *1/1000;% ms^-1
+        k9_a4  = SIM.factor* 122.35         *1/1000;% ms^-1
+        k_9_a4 = SIM.factor*1.944E1            *1/1000;% ms^-1
         k10_a4 = SIM.factor* 2.797           *1/1000;% ms^-1
-        k_10_a4= SIM.factor*0.39497          *1/1000;% ms^-1
-        k11_a4 = SIM.factor* 469.5           *1/1000;% ms^-1
-        k_11_a4= SIM.factor*244.63           *1/1000;% ms^-1
+        k_10_a4= SIM.factor*0.39497           *1/1000;% ms^-1
+        k11_a4 = SIM.factor* 469.5              *1/1000;% ms^-1
+        k_11_a4= SIM.factor*24.463E1           *1/1000;% ms^-1
 
 
          Q = [
@@ -572,7 +573,7 @@ if SIM.absorbAtCleftBD == 1
 end
 
 fileInfo = strcat(...
-                'file_',                 num2str(SIM.fileName),...
+                'test_',                 num2str(SIM.fileName),...
                 ',amparNo=',             num2str(SIM.amparNo), ...
                 ',Subunit=',            num2str(SIM.subunit), ...
                 ',gluNo=',              num2str(SIM.gluPerVesicle),...
@@ -686,10 +687,17 @@ for i_runs = runsBegin : SIM.runs
         'T',            zeros(1, SIM.amparNo));
 
     % distribute AMPARs uniformly on PSD.
+    if SIM.SpillOver == 1
+        NND = 780;  % nearst-neighbor distance between central AMPARs and synapses nearby
+                    % Budisantoso T et al., J Physiol 2013 
+    elseif SIM.SpillOver == 0
+        NND = 0;
+    end
+    
     for i_ampar = 1 : SIM.amparNo_PSD
         rad = sqrt(unifrnd(0, SIM.R_PSD^2)); % (Take square root of unif. distributed random value)
         ang = unifrnd(0, 1);
-        ampar.traj(:, i_ampar) = [rad*cos(2*pi*ang), rad*sin(2*pi*ang), SIM.lowerLid]';
+        ampar.traj(:, i_ampar) = [NND + rad*cos(2*pi*ang), rad*sin(2*pi*ang), SIM.lowerLid]';
         ampar.tag(i_ampar)     = amparState_InCleft_OnPSD;
     end
 
@@ -816,7 +824,7 @@ for i_runs = runsBegin : SIM.runs
     %   exitTime      time of exiting (in ms) (by absorption, pumping, ...)
     %!!!!4
     glu = struct(...
-        'traj',            zeros(3, gluNo_AllGlus), ... % 3= dimension, 3d diffusion
+        'traj',            zeros(3, gluNo_AllGlus), ... % 3= dimension, 3d diffusioon
         'state',           ones (1, gluNo_AllGlus, 'uint8') *gluState_Unreleased, ...
         'boundToAMPAR',    ones (1, gluNo_AllGlus, 'uint32')*INVALID_INDEX, ...
         'bindingPosition', zeros(3, gluNo_AllGlus), ...
@@ -904,7 +912,12 @@ end
 % 
 % save(matlabFileInfo);
 
-char = [num2str(SIM.subunit),'_',num2str(SIM.period),'_',num2str(SIM.fileName),'.mat'];
+if SIM.SpillOver ==1
+    char = [num2str(SIM.subunit),'_',num2str(SIM.period),'_',num2str(SIM.fileName),'_SpillOver.mat'];
+elseif SIM.SpillOver == 0
+    char = [num2str(SIM.subunit),'_',num2str(SIM.period),'_',num2str(SIM.fileName),'.mat'];
+end
+
 fprintf('Saving %s ... \n %f', char, SIM.R_ReleaseZone);
 fprintf('# on PSD =  %f\n', SIM.amparNo_PSD);
 save(char,'amparStates');
