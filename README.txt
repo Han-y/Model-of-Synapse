@@ -6,7 +6,8 @@ Neuroligins maintain clustering of AMPA receptors at a central synapse. (in subm
 
 To make the code concise, we used GluA2 represents slow-GluAs and GluA4 represents fast-GluAs. 
 There are 15 files, the order of operation should be: 
-(1) make.m
+(1) make.m 
+
     To get the .mexw64 file that can be invoked within MATLAB.
 (2) random_release_zone.m
     To get the random distribution of release sites. The default value of random sites is 160. Note that, the random release sites in 160 runs we used are shown in "Vesicle_distributions_P04~30.mat".
