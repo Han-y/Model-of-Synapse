@@ -1,10 +1,10 @@
 # Model-of-Synapse
 This is the README for the models associated with the paper:
 
-Ying Han, Lulu Y.Chen, Thomas C.Sudhof, Bo Zhang
-Neuroligins maintain clustering of AMPA receptors at a central synapse. (in submission)
+Ying Han, Ran Cao, Liming Qin, Lulu Y.Chen, Ai-Hui Tang, Thomas C. Südhof, Bo Zhang
+Neuroligin-3 confines AMPA-receptors into nanoclusters, thereby controlling synaptic strength at the calyx of Held synapses. (in submission)
 
-To make the code concise, we used GluA2 represents slow-GluAs and GluA4 represents fast-GluAs. 
+To make the code concise, we used GluA1 represents slow-GluAs and GluA4 represents fast-GluAs, respectively. 
 There are 15 files, the order of operation should be: 
 (1) make.m 
     To get the .mexw64 file that can be invoked within MATLAB.
